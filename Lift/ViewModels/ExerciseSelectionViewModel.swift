@@ -13,6 +13,7 @@ final class ExerciseSelectionViewModel {
     var searchQuery: String = ""
     var selectedMuscleGroup: MuscleGroup? = nil
     var selectedExercises: Set<String> = []  // exercise definition IDs
+    var alreadyAddedExercises: Set<String> = []  // exercises already in the workout
     var isLoading: Bool = false
 
     private let repo = ExerciseRepository.shared
@@ -23,21 +24,30 @@ final class ExerciseSelectionViewModel {
         repo.search(query: searchQuery, muscleGroup: selectedMuscleGroup)
     }
 
-    var selectedCount: Int { selectedExercises.count }
-
-    var addButtonTitle: String {
-        selectedCount == 0 ? "SELECT EXERCISES" : "ADD \(selectedCount) EXERCISE\(selectedCount == 1 ? "" : "S")"
+    /// Only count newly selected exercises (not already-added ones)
+    var newlySelectedCount: Int {
+        selectedExercises.subtracting(alreadyAddedExercises).count
     }
 
-    var canAdd: Bool { selectedCount > 0 }
+    var addButtonTitle: String {
+        newlySelectedCount == 0 ? "SELECT EXERCISES" : "ADD \(newlySelectedCount) EXERCISE\(newlySelectedCount == 1 ? "" : "S")"
+    }
 
+    var canAdd: Bool { newlySelectedCount > 0 }
+
+    /// Only return newly selected definitions (exclude already-added)
     var selectedDefinitions: [ExerciseDefinition] {
-        repo.exercises.filter { selectedExercises.contains($0.id) }
+        let newIds = selectedExercises.subtracting(alreadyAddedExercises)
+        return repo.exercises.filter { newIds.contains($0.id) }
     }
 
     // MARK: — Actions
 
     func toggleSelection(_ definition: ExerciseDefinition) {
+        // Don't allow toggling off already-added exercises
+        if alreadyAddedExercises.contains(definition.id) {
+            return
+        }
         if selectedExercises.contains(definition.id) {
             selectedExercises.remove(definition.id)
         } else {
@@ -51,12 +61,19 @@ final class ExerciseSelectionViewModel {
     }
 
     func clearSelection() {
-        selectedExercises.removeAll()
+        selectedExercises = alreadyAddedExercises
+    }
+
+    /// Pre-populate with already-added exercise IDs
+    func setAlreadyAdded(_ ids: Set<String>) {
+        alreadyAddedExercises = ids
+        selectedExercises = selectedExercises.union(ids)
     }
 
     func reset() {
         searchQuery = ""
         selectedMuscleGroup = nil
         selectedExercises.removeAll()
+        alreadyAddedExercises.removeAll()
     }
 }

@@ -104,6 +104,7 @@ struct SetRowView: View {
         .padding(.vertical, 3)
         .animation(.liftFast, value: isFlashing)
         .animation(.liftFast, value: set.isCompleted)
+
         .onChange(of: weightText) { _, new in
             if let v = Double(new) { set.weightLbs = v }
         }

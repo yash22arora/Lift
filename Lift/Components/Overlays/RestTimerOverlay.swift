@@ -68,7 +68,12 @@ struct RestTimerOverlay: View {
                             .padding(.vertical, Spacing.sm)
                             .background(Color.liftSurface)
                             .cornerRadius(Radius.sm)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: Radius.sm)
+                                    .stroke(Color.liftPrimary.opacity(0.4), lineWidth: BorderWidth.thin)
+                            )
                     }
+                    .frame(height: 48)
 
                     PrimaryButton("SKIP REST", height: 48) {
                         onSkip()
@@ -89,6 +94,7 @@ struct RestTimerOverlay: View {
                     .stroke(Color.liftBorder, lineWidth: BorderWidth.thin)
             )
         }
+        .padding(.bottom, 80)
         .ignoresSafeArea()
         .onAppear { startTimer() }
         .onDisappear { stopTimer() }

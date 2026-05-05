@@ -19,6 +19,7 @@ final class ActiveWorkoutViewModel {
     var showExerciseSelection: Bool = false
     var isFinishing: Bool = false
     var currentExerciseIndex: Int = 0
+    var hasStarted: Bool = false
 
     private var repository: WorkoutRepository?
     nonisolated(unsafe) private var timerTask: Task<Void, Never>?
@@ -51,12 +52,25 @@ final class ActiveWorkoutViewModel {
 
     // MARK: — Lifecycle
 
-    func startWorkout(name: String = "Quick Workout", repository: WorkoutRepository) {
+    /// Initialize the workout with selected exercises and start the timer
+    func startWorkout(name: String = "Quick Workout", repository: WorkoutRepository, initialExercises: [ExerciseDefinition]) {
         self.repository = repository
         let w = repository.createWorkout(name: name)
         self.workout = w
+        // Add initial exercises
+        for def in initialExercises {
+            let ex = repository.addExercise(to: w, definition: def)
+            _ = repository.addSet(to: ex)
+        }
+        repository.save()
+        hasStarted = true
         startTimer()
         HapticService.heavyImpact()
+    }
+
+    /// IDs of exercises already added to the current workout
+    var alreadyAddedExerciseIds: Set<String> {
+        Set(sortedExercises.map { $0.exerciseDefinitionId })
     }
 
     func finishWorkout() {

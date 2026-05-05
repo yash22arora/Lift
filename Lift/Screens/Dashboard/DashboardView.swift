@@ -9,6 +9,8 @@ struct DashboardView: View {
     @State private var viewModel = DashboardViewModel()
     @State private var navigateToWorkout = false
     @State private var heroScrolledPast = false
+    @State private var showExerciseSelection = false
+    @State private var selectedExercises: [ExerciseDefinition] = []
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -39,7 +41,9 @@ struct DashboardView: View {
 
             // ─── Sticky Start CTA ──────────────────────────────────
             VStack(spacing: 0) {
-                NavigationLink(destination: ActiveWorkoutView()) {
+                Button {
+                    showExerciseSelection = true
+                } label: {
                     Text("START WORKOUT")
                         .font(.liftButton)
                         .tracking(1)
@@ -71,6 +75,19 @@ struct DashboardView: View {
         .toolbarBackground(heroScrolledPast ? .visible : .hidden, for: .navigationBar)
         .onAppear {
             viewModel.load(repository: WorkoutRepository(modelContext: modelContext))
+        }
+        .sheet(isPresented: $showExerciseSelection) {
+            ExerciseSelectionView { definitions in
+                selectedExercises = definitions
+                showExerciseSelection = false
+                // Navigate after a brief delay to allow sheet dismissal
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    navigateToWorkout = true
+                }
+            }
+        }
+        .navigationDestination(isPresented: $navigateToWorkout) {
+            ActiveWorkoutView(initialExercises: selectedExercises)
         }
     }
 

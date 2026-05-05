@@ -5,6 +5,8 @@ import SwiftUI
 import SwiftData
 
 struct ActiveWorkoutView: View {
+    let initialExercises: [ExerciseDefinition]
+
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
@@ -14,6 +16,9 @@ struct ActiveWorkoutView: View {
     var body: some View {
         ZStack {
             Color.liftBackground.ignoresSafeArea()
+                .onTapGesture {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
 
             VStack(spacing: 0) {
                 // ─── Timer Header ──────────────────────────────────────
@@ -51,7 +56,7 @@ struct ActiveWorkoutView: View {
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
         .sheet(isPresented: $viewModel.showExerciseSelection) {
-            ExerciseSelectionView { definitions in
+            ExerciseSelectionView(alreadyAddedExerciseIds: viewModel.alreadyAddedExerciseIds) { definitions in
                 viewModel.addExercises(definitions)
                 viewModel.showExerciseSelection = false
             }
@@ -67,7 +72,7 @@ struct ActiveWorkoutView: View {
         }
         .onAppear {
             let repo = WorkoutRepository(modelContext: modelContext)
-            viewModel.startWorkout(repository: repo)
+            viewModel.startWorkout(repository: repo, initialExercises: initialExercises)
         }
     }
 
@@ -208,6 +213,7 @@ struct ActiveWorkoutView: View {
                 .padding(.bottom, Spacing.xl)
             }
         }
+        .scrollDismissesKeyboard(.interactively)
     }
 
     // MARK: — Up Next Card

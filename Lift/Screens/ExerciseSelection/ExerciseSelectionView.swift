@@ -4,10 +4,16 @@
 import SwiftUI
 
 struct ExerciseSelectionView: View {
+    let alreadyAddedExerciseIds: Set<String>
     let onAdd: ([ExerciseDefinition]) -> Void
 
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel = ExerciseSelectionViewModel()
+
+    init(alreadyAddedExerciseIds: Set<String> = [], onAdd: @escaping ([ExerciseDefinition]) -> Void) {
+        self.alreadyAddedExerciseIds = alreadyAddedExerciseIds
+        self.onAdd = onAdd
+    }
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -45,6 +51,11 @@ struct ExerciseSelectionView: View {
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
         .presentationBackground(Color.liftBackground)
+        .onAppear {
+            if !alreadyAddedExerciseIds.isEmpty {
+                viewModel.setAlreadyAdded(alreadyAddedExerciseIds)
+            }
+        }
     }
 
     // MARK: — Simplified pill bar (CHEST, BACK, LEGS, ARMS matching mockup)
@@ -132,6 +143,7 @@ struct ExerciseSelectionView: View {
 
     private func exerciseRow(_ definition: ExerciseDefinition) -> some View {
         let isSelected = viewModel.isSelected(definition)
+        let isAlreadyAdded = viewModel.alreadyAddedExercises.contains(definition.id)
 
         return Button {
             viewModel.toggleSelection(definition)
@@ -141,10 +153,17 @@ struct ExerciseSelectionView: View {
                     Text(definition.name.uppercased())
                         .font(.liftBodyMd)
                         .foregroundStyle(isSelected ? Color.liftPrimary : Color.liftText)
-                    Text("MAX: — KG")
-                        .font(.liftCaption)
-                        .foregroundStyle(Color.liftMuted)
-                        .tracking(0.4)
+                    if isAlreadyAdded {
+                        Text("ADDED")
+                            .font(.liftCaption)
+                            .foregroundStyle(Color.liftPrimary.opacity(0.6))
+                            .tracking(0.4)
+                    } else {
+                        Text("MAX: — KG")
+                            .font(.liftCaption)
+                            .foregroundStyle(Color.liftMuted)
+                            .tracking(0.4)
+                    }
                 }
 
                 Spacer()
@@ -160,7 +179,7 @@ struct ExerciseSelectionView: View {
                         )
 
                     if isSelected {
-                        Image(systemName: "checkmark")
+                        Image(systemName: isAlreadyAdded ? "lock.fill" : "checkmark")
                             .font(.system(size: 12, weight: .bold))
                             .foregroundStyle(Color.liftBackground)
                             .transition(.scale.combined(with: .opacity))
@@ -171,6 +190,7 @@ struct ExerciseSelectionView: View {
             .padding(.horizontal, Spacing.md)
             .padding(.vertical, 14)
             .contentShape(Rectangle())
+            .opacity(isAlreadyAdded ? 0.7 : 1.0)
         }
         .buttonStyle(.plain)
     }
