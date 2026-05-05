@@ -11,7 +11,7 @@ final class Workout {
     var startDate: Date
     var endDate: Date?
     var notes: String?
-    @Relationship(deleteRule: .cascade) var exercises: [WorkoutExercise]
+    @Relationship(deleteRule: .cascade, inverse: \WorkoutExercise.workout) var exercises: [WorkoutExercise]
 
     init(name: String = "Quick Workout") {
         self.id = UUID()

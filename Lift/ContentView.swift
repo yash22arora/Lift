@@ -15,7 +15,7 @@ struct ContentView: View {
             }
 
             NavigationStack {
-                PlaceholderTabView(title: "WORKOUT LOG", subtitle: "Coming soon")
+                LogsView()
             }
             .tabItem {
                 Label("LOG", systemImage: "clock.arrow.circlepath")
@@ -29,10 +29,10 @@ struct ContentView: View {
             }
 
             NavigationStack {
-                PlaceholderTabView(title: "ELITE", subtitle: "Profile & settings")
+                ProfileView()
             }
             .tabItem {
-                Label("ELITE", systemImage: "person.fill")
+                Label("PROFILE", systemImage: "person.fill")
             }
         }
         .tint(Color.liftPrimary)

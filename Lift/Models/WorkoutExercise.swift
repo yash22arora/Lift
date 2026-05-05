@@ -10,7 +10,8 @@ final class WorkoutExercise {
     var exerciseDefinitionId: String
     var exerciseName: String
     var order: Int
-    @Relationship(deleteRule: .cascade) var sets: [WorkoutSet]
+    var workout: Workout?
+    @Relationship(deleteRule: .cascade, inverse: \WorkoutSet.exercise) var sets: [WorkoutSet]
 
     init(
         exerciseDefinitionId: String,

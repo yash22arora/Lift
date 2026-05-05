@@ -111,6 +111,17 @@ final class WorkoutRepository {
         modelContext.delete(workout)
     }
 
+    func clearAllData() {
+        do {
+            try modelContext.delete(model: Workout.self)
+            try modelContext.delete(model: WorkoutExercise.self)
+            try modelContext.delete(model: WorkoutSet.self)
+            save()
+        } catch {
+            print("[WorkoutRepository] Clear data error: \(error)")
+        }
+    }
+
     // MARK: — Persistence
 
     func save() {

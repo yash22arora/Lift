@@ -37,6 +37,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A485ED0F2FAA91F500BEA7A4 /* Lift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Lift.xcodeproj; sourceTree = "<group>"; };
 		A4FD44D52FA93A24003783A6 /* Lift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4FD45542FA940F1003783A6 /* LiftLiveActivityExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = LiftLiveActivityExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4FD45562FA940F1003783A6 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -89,6 +90,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A485ED112FAA91F500BEA7A4 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 		A4FD44CC2FA93A24003783A6 = {
 			isa = PBXGroup;
 			children = (
@@ -196,6 +202,12 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A4FD44D62FA93A24003783A6 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = A485ED112FAA91F500BEA7A4 /* Products */;
+					ProjectRef = A485ED0F2FAA91F500BEA7A4 /* Lift.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				A4FD44D42FA93A24003783A6 /* Lift */,

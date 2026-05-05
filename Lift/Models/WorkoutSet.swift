@@ -13,6 +13,7 @@ final class WorkoutSet {
     var isCompleted: Bool
     var completedAt: Date?
     var rpe: Double?            // Rate of perceived exertion, optional
+    var exercise: WorkoutExercise?
 
     init(
         setNumber: Int,
