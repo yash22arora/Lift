@@ -48,7 +48,7 @@ final class DashboardViewModel {
         guard let repo = repository else { return }
         isLoadingWorkouts = true
         do {
-            recentWorkouts = try repo.fetchRecentWorkouts(limit: 8)
+            recentWorkouts = try repo.fetchRecentWorkouts(limit: 2)
             weeklyWorkoutCount = try repo.fetchWorkoutsThisWeek().count
         } catch {
             print("[Dashboard] Workout fetch error: \(error)")

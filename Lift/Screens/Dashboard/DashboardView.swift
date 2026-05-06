@@ -8,7 +8,6 @@ struct DashboardView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = DashboardViewModel()
     @State private var navigateToWorkout = false
-    @State private var heroScrolledPast = false
     @State private var showExerciseSelection = false
     @State private var selectedExercises: [ExerciseDefinition] = []
 
@@ -19,19 +18,6 @@ struct DashboardView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: Spacing.lg) {
                     heroCard
-                        .background(
-                            GeometryReader { geo in
-                                Color.clear
-                                    .onChange(of: geo.frame(in: .global).maxY) { _, newVal in
-                                        let past = newVal < 0
-                                        if past != heroScrolledPast {
-                                            withAnimation(.easeInOut(duration: 0.2)) {
-                                                heroScrolledPast = past
-                                            }
-                                        }
-                                    }
-                            }
-                        )
                     dailyMetrics
                     recentHistory
                 }
@@ -59,20 +45,15 @@ struct DashboardView: View {
             }
         }
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Text(heroScrolledPast ? "TRAIN" : "TRAIN TODAY")
-                    .font(.liftHeadingMd)
-                    .foregroundStyle(Color.liftText)
-                    .animation(.easeInOut(duration: 0.2), value: heroScrolledPast)
-            }
             ToolbarItem(placement: .topBarTrailing) {
                 Image(systemName: "person.circle")
                     .font(.system(size: 22, weight: .light))
                     .foregroundStyle(Color.liftMuted)
             }
         }
+        .navigationTitle("Train")
         .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
-        .toolbarBackground(heroScrolledPast ? .visible : .hidden, for: .navigationBar)
+        .toolbarBackground(.hidden, for: .navigationBar)
         .onAppear {
             viewModel.load(repository: WorkoutRepository(modelContext: modelContext))
         }
@@ -230,14 +211,17 @@ struct DashboardView: View {
             }
 
             if viewModel.isLoadingWorkouts {
-                ForEach(0..<3, id: \.self) { _ in
+                ForEach(0..<2, id: \.self) { _ in
                     WorkoutSessionCardSkeleton()
                 }
             } else if viewModel.recentWorkouts.isEmpty {
                 emptyWorkoutsCard
             } else {
                 ForEach(viewModel.recentWorkouts) { workout in
-                    WorkoutSessionCard(workout: workout)
+                    NavigationLink(destination: WorkoutDetailView(workout: workout)) {
+                        WorkoutSessionCard(workout: workout)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
         }
