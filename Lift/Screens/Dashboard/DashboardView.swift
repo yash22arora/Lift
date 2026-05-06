@@ -221,7 +221,7 @@ struct DashboardView: View {
                 Text("RECENT HISTORY")
                     .liftCaptionStyle()
                 Spacer()
-                Button {} label: {
+                NavigationLink(destination: PastWorkoutsView()) {
                     Text("VIEW ALL")
                         .font(.liftCaption)
                         .tracking(0.6)
