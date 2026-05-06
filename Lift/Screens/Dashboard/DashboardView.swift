@@ -10,6 +10,7 @@ struct DashboardView: View {
     @State private var navigateToWorkout = false
     @State private var showExerciseSelection = false
     @State private var selectedExercises: [ExerciseDefinition] = []
+    @State private var heroScrolledPast = false
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -18,6 +19,19 @@ struct DashboardView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: Spacing.lg) {
                     heroCard
+                        .background(
+                            GeometryReader { geo in
+                                Color.clear
+                                    .onChange(of: geo.frame(in: .global).maxY) { _, newVal in
+                                        let past = newVal < 80
+                                        if past != heroScrolledPast {
+                                            withAnimation(.easeInOut(duration: 0.2)) {
+                                                heroScrolledPast = past
+                                            }
+                                        }
+                                    }
+                            }
+                        )
                     dailyMetrics
                     recentHistory
                 }
@@ -51,7 +65,7 @@ struct DashboardView: View {
                     .foregroundStyle(Color.liftMuted)
             }
         }
-        .navigationTitle("Train")
+        .navigationTitle(heroScrolledPast ? "TRAIN" : "")
         .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
         .toolbarBackground(.hidden, for: .navigationBar)
         .onAppear {
