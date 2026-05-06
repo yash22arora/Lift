@@ -33,7 +33,7 @@ struct ExerciseListRow: View {
                             .font(.liftDataSm)
                             .foregroundStyle(Color.liftMuted)
                             .monospacedDigit()
-                        Text("LBS")
+                        Text("KG")
                             .liftCaptionStyle()
                     }
                 }

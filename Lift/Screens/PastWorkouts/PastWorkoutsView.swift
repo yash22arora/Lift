@@ -159,7 +159,7 @@ struct PastWorkoutCard: View {
         // e.g. "3 × 10 @ 80KG" or "3 SETS"
         guard !sets.isEmpty else { return "" }
         let count = sets.count
-        let avgWeight = sets.map { $0.weightLbs }.reduce(0, +) / Double(sets.count)
+        let avgWeight = sets.map { $0.weightKg }.reduce(0, +) / Double(sets.count)
         let avgReps = Int(sets.map { Double($0.reps) }.reduce(0, +) / Double(sets.count))
         if avgWeight > 0 && avgReps > 0 {
             return "(\(count) × \(avgReps) @ \(Int(avgWeight))KG)"

@@ -38,6 +38,7 @@ struct DashboardView: View {
                 .padding(.horizontal, Spacing.md)
                 .padding(.bottom, ComponentSize.ctaHeight + 100)
             }
+            .scrollBounceBehavior(.basedOnSize)
 
             // ─── Sticky Start CTA ──────────────────────────────────
             VStack(spacing: 0) {
@@ -58,15 +59,7 @@ struct DashboardView: View {
                 .padding(.bottom, Spacing.md)
             }
         }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Image(systemName: "person.circle")
-                    .font(.system(size: 22, weight: .light))
-                    .foregroundStyle(Color.liftMuted)
-            }
-        }
         .navigationTitle(heroScrolledPast ? "TRAIN" : "")
-        .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
         .toolbarBackground(.hidden, for: .navigationBar)
         .onAppear {
             viewModel.load(repository: WorkoutRepository(modelContext: modelContext))

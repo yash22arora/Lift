@@ -61,7 +61,7 @@ struct RestTimerOverlay: View {
                         addTime(15)
                     } label: {
                         Text("+15s")
-                            .font(.liftCaption)
+                            .font(.liftButton)
                             .tracking(0.6)
                             .foregroundStyle(Color.liftMuted)
                             .padding(.horizontal, Spacing.md)
@@ -83,18 +83,18 @@ struct RestTimerOverlay: View {
             }
             .padding(.horizontal, Spacing.lg)
             .padding(.vertical, Spacing.xl)
-            .background(
-                Rectangle()
-                    .fill(.ultraThinMaterial)
-                    .background(Color.liftBackground.opacity(0.92))
-                    .cornerRadius(0)
-            )
             .overlay(
                 Rectangle()
                     .stroke(Color.liftBorder, lineWidth: BorderWidth.thin)
             )
         }
         .padding(.bottom, 80)
+        .background(
+            Rectangle()
+                .fill(.ultraThinMaterial)
+                .background(Color.liftBackground.opacity(0.92))
+                .cornerRadius(0)
+        )
         .ignoresSafeArea()
         .onAppear { startTimer() }
         .onDisappear { stopTimer() }

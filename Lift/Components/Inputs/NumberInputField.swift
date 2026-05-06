@@ -52,11 +52,11 @@ struct NumberInputField: View {
 #Preview {
     VStack(spacing: Spacing.md) {
         HStack {
-            NumberInputField(placeholder: "225", unit: "LBS", value: .constant("225"))
+            NumberInputField(placeholder: "100", unit: "KG", value: .constant("100"))
             NumberInputField(placeholder: "8", unit: "REPS", value: .constant(""))
         }
         HStack {
-            NumberInputField(placeholder: "0", unit: "LBS", value: .constant("abc"), isError: true)
+            NumberInputField(placeholder: "0", unit: "KG", value: .constant("abc"), isError: true)
         }
     }
     .padding()

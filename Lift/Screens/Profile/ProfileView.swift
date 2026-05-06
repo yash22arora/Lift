@@ -27,7 +27,7 @@ struct ProfileView: View {
 
                 // Settings List
                 VStack(spacing: 0) {
-                    settingRow(title: "CLEAR ALL DATA", icon: "trash", color: .red) {
+                    settingRow(title: "Clear all data", icon: "trash", color: .red) {
                         showDeleteConfirm = true
                     }
                 }
@@ -64,7 +64,7 @@ struct ProfileView: View {
                     .frame(width: 24)
                 
                 Text(title)
-                    .font(.liftButton)
+                    .font(.liftBodyMd)
                     .foregroundStyle(Color.liftText)
                 
                 Spacer()

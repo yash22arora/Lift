@@ -24,6 +24,10 @@ final class ProgressionViewModel {
     var isError: Bool = false
     var growthPercentage: Double = 0
     var availableExercises: [ExerciseDefinition] = []
+    
+    // New stats
+    var avgSessionTime: String = "—"
+    var avgSessionFrequency: String = "—"
 
     private var repository: WorkoutRepository?
 
@@ -37,7 +41,7 @@ final class ProgressionViewModel {
     }
 
     var yLabel: String {
-        selectedMetric == .volume ? "LBS" : "LBS"
+        "KG"
     }
 
     // MARK: — Load
@@ -47,6 +51,7 @@ final class ProgressionViewModel {
         self.selectedExerciseId = exerciseId
         self.selectedExerciseName = exerciseName
         loadAvailableExercises()
+        loadGeneralStats()
         Task { await loadChartData() }
     }
 
@@ -65,7 +70,56 @@ final class ProgressionViewModel {
     // MARK: — Private
 
     private func loadAvailableExercises() {
-        availableExercises = ExerciseRepository.shared.exercises
+        let allExercises = ExerciseRepository.shared.exercises
+        guard let repo = repository else {
+            availableExercises = allExercises
+            return
+        }
+        
+        do {
+            let workouts = try repo.fetchAllWorkouts()
+            var counts: [String: Int] = [:]
+            for w in workouts {
+                for ex in w.exercises {
+                    counts[ex.exerciseDefinitionId, default: 0] += 1
+                }
+            }
+            
+            availableExercises = allExercises.sorted {
+                let countA = counts[$0.id, default: 0]
+                let countB = counts[$1.id, default: 0]
+                if countA != countB {
+                    return countA > countB
+                }
+                return $0.name < $1.name
+            }
+        } catch {
+            availableExercises = allExercises
+        }
+    }
+
+    private func loadGeneralStats() {
+        guard let repo = repository else { return }
+        do {
+            let workouts = try repo.fetchAllWorkouts().filter { $0.endDate != nil }
+            guard !workouts.isEmpty else { return }
+            
+            // Avg Session Time
+            let totalDuration = workouts.compactMap { $0.duration }.reduce(0, +)
+            let avgSeconds = totalDuration / Double(workouts.count)
+            let minutes = Int(avgSeconds) / 60
+            avgSessionTime = "\(minutes)m"
+            
+            // Avg Frequency per week
+            if let firstWorkout = workouts.last { // workouts are sorted by date descending, so last is oldest
+                let daysSinceStart = max(1, Calendar.current.dateComponents([.day], from: firstWorkout.startDate, to: Date()).day ?? 1)
+                let weeks = Double(daysSinceStart) / 7.0
+                let freq = Double(workouts.count) / max(1.0, weeks)
+                avgSessionFrequency = String(format: "%.1f", freq)
+            }
+        } catch {
+            print("Error loading general stats: \(error)")
+        }
     }
 
     private func loadChartData() async {

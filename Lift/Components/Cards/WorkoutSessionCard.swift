@@ -97,7 +97,7 @@ struct WorkoutSessionCard: View {
     private func setsSummary(_ sets: [WorkoutSet]) -> String {
         guard !sets.isEmpty else { return "" }
         let count = sets.count
-        let avgWeight = sets.map { $0.weightLbs }.reduce(0, +) / Double(count)
+        let avgWeight = sets.map { $0.weightKg }.reduce(0, +) / Double(count)
         let avgReps = Int(sets.map { Double($0.reps) }.reduce(0, +) / Double(count))
         if avgWeight > 0 && avgReps > 0 {
             return "(\(count) × \(avgReps) @ \(Int(avgWeight))KG)"
@@ -109,7 +109,7 @@ struct WorkoutSessionCard: View {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.maximumFractionDigits = 0
-        let formatted = formatter.string(from: NSNumber(value: workout.totalVolumeLbs)) ?? "0"
+        let formatted = formatter.string(from: NSNumber(value: workout.totalVolumeKg)) ?? "0"
         return "\(formatted) KG"
     }
 

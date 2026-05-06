@@ -76,7 +76,7 @@ final class WorkoutRepository {
 
     func addSet(to exercise: WorkoutExercise, weight: Double = 0, reps: Int = 0) -> WorkoutSet {
         let setNumber = exercise.sets.count + 1
-        let workoutSet = WorkoutSet(setNumber: setNumber, weightLbs: weight, reps: reps)
+        let workoutSet = WorkoutSet(setNumber: setNumber, weightKg: weight, reps: reps)
         modelContext.insert(workoutSet)
         exercise.sets.append(workoutSet)
         return workoutSet

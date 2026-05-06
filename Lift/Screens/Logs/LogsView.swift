@@ -57,7 +57,7 @@ struct LogsView: View {
             Spacer()
             
             HStack(alignment: .lastTextBaseline, spacing: 2) {
-                Text("\(Int(set.weightLbs))")
+                Text("\(Int(set.weightKg))")
                     .font(.liftDataMd)
                     .foregroundStyle(Color.liftPrimary)
                 Text("KG")

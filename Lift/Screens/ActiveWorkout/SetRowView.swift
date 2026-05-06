@@ -20,7 +20,7 @@ struct SetRowView: View {
         self.isActive = isActive
         self.onComplete = onComplete
         self.onDelete = onDelete
-        _weightText = State(initialValue: set.weightLbs > 0 ? String(format: "%.0f", set.weightLbs) : "")
+        _weightText = State(initialValue: set.weightKg > 0 ? String(format: "%.0f", set.weightKg) : "")
         _repsText   = State(initialValue: set.reps > 0 ? "\(set.reps)" : "")
     }
 
@@ -106,7 +106,7 @@ struct SetRowView: View {
         .animation(.liftFast, value: set.isCompleted)
 
         .onChange(of: weightText) { _, new in
-            if let v = Double(new) { set.weightLbs = v }
+            if let v = Double(new) { set.weightKg = v }
         }
         .onChange(of: repsText) { _, new in
             if let v = Int(new) { set.reps = v }
@@ -116,7 +116,7 @@ struct SetRowView: View {
     private func handleComplete() {
         guard !set.isCompleted else { return }
         // Commit values
-        if let w = Double(weightText) { set.weightLbs = w }
+        if let w = Double(weightText) { set.weightKg = w }
         if let r = Int(repsText)      { set.reps = r }
         // Flash
         withAnimation(.liftFast) { isFlashing = true }

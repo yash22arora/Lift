@@ -38,17 +38,17 @@ final class Workout {
     }
 
     /// Total volume across all exercises
-    var totalVolumeLbs: Double {
+    var totalVolumeKg: Double {
         exercises.reduce(0) { $0 + $1.totalVolume }
     }
 
-    /// Formatted volume string e.g. "12,400 LBS"
+    /// Formatted volume string e.g. "12,400 KG"
     var totalVolumeFormatted: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.maximumFractionDigits = 0
-        let formatted = formatter.string(from: NSNumber(value: totalVolumeLbs)) ?? "0"
-        return "\(formatted) LBS"
+        let formatted = formatter.string(from: NSNumber(value: totalVolumeKg)) ?? "0"
+        return "\(formatted) KG"
     }
 
     /// Total completed sets across all exercises

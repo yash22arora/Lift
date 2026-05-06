@@ -200,7 +200,7 @@ struct WorkoutDetailView: View {
                 .monospacedDigit()
                 .frame(width: 40, alignment: .leading)
 
-            Text(set.weightLbs > 0 ? "\(Int(set.weightLbs)) KG" : "—")
+            Text(set.weightKg > 0 ? "\(Int(set.weightKg)) KG" : "—")
                 .font(.liftBodyMd)
                 .foregroundStyle(Color.liftText)
                 .monospacedDigit()

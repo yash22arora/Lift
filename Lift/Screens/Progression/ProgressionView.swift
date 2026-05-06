@@ -7,7 +7,8 @@ import SwiftData
 struct ProgressionView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = ProgressionViewModel()
-    @State private var showExercisePicker = false
+    @State private var showVolumeTooltip = false
+    @State private var show1RMTooltip = false
 
     var body: some View {
         ZStack {
@@ -15,7 +16,12 @@ struct ProgressionView: View {
 
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: Spacing.lg) {
-                    // ─── Exercise Header ───────────────────────────────
+                    // ─── Stats Overview ────────────────────────────────
+                    statsOverview
+                    
+                    Divider().tint(.liftPrimary)
+
+                    // ─── Exercise Header (Dropdown) ────────────────────
                     exerciseHeader
 
                     // ─── Metric Segmented Control ──────────────────────
@@ -34,25 +40,8 @@ struct ProgressionView: View {
                 .padding(.bottom, 100)
             }
         }
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text("PROGRESSION")
-                    .font(.liftButton)
-                    .foregroundStyle(Color.liftText)
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                Button { showExercisePicker = true } label: {
-                    Image(systemName: "arrow.triangle.2.circlepath")
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundStyle(Color.liftMuted)
-                }
-            }
-        }
-        .toolbarBackground(Color.liftBackground, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .sheet(isPresented: $showExercisePicker) {
-            exercisePickerSheet
-        }
+        .navigationTitle("Progression")
+        .toolbarBackground(.hidden, for: .navigationBar)
         .onAppear {
             let repo = WorkoutRepository(modelContext: modelContext)
             viewModel.load(
@@ -63,20 +52,77 @@ struct ProgressionView: View {
         }
     }
 
-    // MARK: — Exercise Header
+    // MARK: — Stats Overview
+
+    private var statsOverview: some View {
+        HStack(spacing: Spacing.md) {
+            statBox(label: "AVG SESSION TIME", value: viewModel.avgSessionTime)
+            statBox(label: "SESSIONS / WEEK", value: viewModel.avgSessionFrequency)
+        }
+        .padding(.vertical, 12)
+    }
+
+    private func statBox(label: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(label)
+                .liftCaptionStyle()
+            Text(value)
+                .font(.liftDataMd)
+                .foregroundStyle(Color.liftPrimary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(Spacing.md)
+        .background(Color.liftSurface)
+        .cornerRadius(Radius.sm)
+        .overlay(
+            RoundedRectangle(cornerRadius: Radius.sm)
+                .stroke(Color.liftBorder, lineWidth: BorderWidth.thin)
+        )
+    }
+
+    // MARK: — Exercise Header (Dropdown)
 
     private var exerciseHeader: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("CURRENT EXERCISE")
                 .liftCaptionStyle()
-            Text(viewModel.selectedExerciseName.uppercased())
-                .font(.liftHeadingXL)
-                .foregroundStyle(Color.liftText)
+            
+            Menu {
+                ForEach(viewModel.availableExercises) { def in
+                    Button {
+                        viewModel.selectExercise(def)
+                    } label: {
+                        HStack {
+                            Text(def.name.uppercased())
+                            if def.id == viewModel.selectedExerciseId {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            } label: {
+                HStack(spacing: 8) {
+                    Text(viewModel.selectedExerciseName.uppercased())
+                        .font(.liftHeadingMd)
+                        .foregroundStyle(Color.liftText)
+                        .minimumScaleFactor(0.6)
+                        .lineLimit(nil)
+                        .multilineTextAlignment(.leading)
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundStyle(Color.liftPrimary)
+                }
+                .padding(.vertical, 8)
+                .cornerRadius(Radius.sm)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    // MARK: — Segmented Control (VOLUME | 1RM with neon underline)
+    // MARK: — Segmented Control (VOLUME | 1RM with tooltips)
 
     private var metricSegmentedControl: some View {
         HStack(spacing: 0) {
@@ -85,15 +131,29 @@ struct ProgressionView: View {
                     viewModel.switchMetric(to: metric)
                 } label: {
                     VStack(spacing: 0) {
-                        Text(metric.rawValue)
-                            .font(.liftBodyMd)
-                            .foregroundStyle(
-                                viewModel.selectedMetric == metric
-                                    ? Color.liftText
-                                    : Color.liftMuted
-                            )
-                            .frame(maxWidth: .infinity)
-                            .frame(height: ComponentSize.segmentHeight)
+                        HStack(spacing: 4) {
+                            Text(metric.rawValue)
+                                .font(.liftBodyMd)
+                            
+                            Image(systemName: "info.circle")
+                                .font(.system(size: 12))
+                                .foregroundStyle(Color.liftMuted)
+                                .onTapGesture {
+                                    if metric == .volume { showVolumeTooltip = true }
+                                    else { show1RMTooltip = true }
+                                }
+                                .popover(isPresented: metric == .volume ? $showVolumeTooltip : $show1RMTooltip) {
+                                    tooltipContent(for: metric)
+                                        .presentationCompactAdaptation(.popover)
+                                }
+                        }
+                        .foregroundStyle(
+                            viewModel.selectedMetric == metric
+                                ? Color.liftText
+                                : Color.liftMuted
+                        )
+                        .frame(maxWidth: .infinity)
+                        .frame(height: ComponentSize.segmentHeight)
 
                         // Active underline
                         Rectangle()
@@ -105,6 +165,23 @@ struct ProgressionView: View {
                 .animation(.liftFast, value: viewModel.selectedMetric)
             }
         }
+    }
+
+    private func tooltipContent(for metric: ProgressionMetric) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(metric.rawValue)
+                .font(.liftHeadingMd)
+                .foregroundStyle(Color.liftPrimary)
+            
+            Text(metric == .volume ? 
+                 "Total weight moved during your workout. Calculated as: Weight × Reps × Sets." :
+                 "The maximum amount of weight you can lift for a single repetition, estimated using the Epley formula.")
+                .font(.liftBodyMd)
+                .foregroundStyle(Color.liftText)
+        }
+        .padding()
+        .frame(width: 280)
+        .background(Color.liftSurface)
     }
 
     // MARK: — KPI Stats
@@ -121,7 +198,7 @@ struct ProgressionView: View {
                         .font(.liftDataXL)
                         .foregroundStyle(Color.liftPrimary)
                         .monospacedDigit()
-                    Text("LBS")
+                    Text("KG")
                         .font(.liftCaption)
                         .foregroundStyle(Color.liftMuted)
                 }
@@ -190,8 +267,7 @@ struct ProgressionView: View {
         VStack(alignment: .leading, spacing: Spacing.md) {
             HStack {
                 Text("SESSION HISTORY")
-                    .font(.liftHeadingMd)
-                    .foregroundStyle(Color.liftText)
+                    .liftCaptionStyle()
                 Spacer()
                 Text("LAST 30 DAYS")
                     .liftCaptionStyle()
@@ -244,43 +320,4 @@ struct ProgressionView: View {
         )
     }
 
-    // MARK: — Exercise picker sheet
-
-    private var exercisePickerSheet: some View {
-        NavigationStack {
-            ZStack {
-                Color.liftBackground.ignoresSafeArea()
-                List(viewModel.availableExercises) { def in
-                    Button {
-                        viewModel.selectExercise(def)
-                        showExercisePicker = false
-                    } label: {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(def.name.uppercased())
-                                    .font(.liftBodyMd)
-                                    .foregroundStyle(Color.liftText)
-                                Text(def.muscleGroups.map(\.rawValue).joined(separator: " · ").uppercased())
-                                    .liftCaptionStyle()
-                            }
-                            Spacer()
-                            if def.id == viewModel.selectedExerciseId {
-                                Image(systemName: "checkmark")
-                                    .foregroundStyle(Color.liftPrimary)
-                            }
-                        }
-                    }
-                    .listRowBackground(Color.liftSurface)
-                }
-                .listStyle(.plain)
-                .scrollContentBackground(.hidden)
-            }
-            .navigationTitle("SELECT EXERCISE")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(Color.liftBackground, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-        }
-        .presentationDetents([.medium, .large])
-        .presentationBackground(Color.liftBackground)
-    }
 }
