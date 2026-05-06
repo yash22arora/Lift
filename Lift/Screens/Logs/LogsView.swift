@@ -34,7 +34,14 @@ struct LogsView: View {
                 }
             }
         }
-        .navigationTitle("LOGS")
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("LOGS")
+                    .font(.liftBody)
+                    .foregroundStyle(Color.liftPrimary)
+            }
+        }
+        .toolbarBackground(.automatic, for: .navigationBar)
         .navigationBarTitleDisplayMode(.inline)
     }
 

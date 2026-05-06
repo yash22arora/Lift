@@ -36,7 +36,14 @@ struct WorkoutDetailView: View {
                 .padding(.bottom, 48)
             }
         }
-        .navigationTitle(workout.name.uppercased())
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(workout.name.uppercased())
+                    .font(.liftBody)
+                    .foregroundStyle(Color.liftPrimary)
+            }
+        }
+        .toolbarBackground(.automatic, for: .navigationBar)
         .navigationBarTitleDisplayMode(.inline)
     }
 

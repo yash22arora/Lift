@@ -40,8 +40,15 @@ struct ProgressionView: View {
                 .padding(.bottom, 100)
             }
         }
-        .navigationTitle("Progression")
-        .toolbarBackground(.hidden, for: .navigationBar)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("PROGRESSION")
+                    .font(.liftBody)
+                    .foregroundStyle(Color.liftPrimary)
+            }
+        }
+        .toolbarBackground(.automatic, for: .navigationBar)
+        .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             let repo = WorkoutRepository(modelContext: modelContext)
             viewModel.load(

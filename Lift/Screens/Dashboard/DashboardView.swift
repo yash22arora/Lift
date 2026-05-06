@@ -59,7 +59,14 @@ struct DashboardView: View {
                 .padding(.bottom, Spacing.md)
             }
         }
-        .navigationTitle(heroScrolledPast ? "TRAIN" : "")
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("TRAIN")
+                    .font(.liftBody)
+                    .foregroundStyle(Color.liftPrimary)
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
         .onAppear {
             viewModel.load(repository: WorkoutRepository(modelContext: modelContext))

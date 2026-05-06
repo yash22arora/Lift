@@ -35,15 +35,21 @@ struct PastWorkoutsView: View {
                 }
             }
         }
-        .navigationTitle("PAST WORKOUTS")
-        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("PAST WORKOUTS")
+                    .font(.liftBody)
+                    .foregroundStyle(Color.liftPrimary)
+            }
+            
             ToolbarItem(placement: .topBarTrailing) {
                 Text("\(workouts.count) SESSIONS")
                     .font(.liftCaption)
                     .foregroundStyle(Color.liftMuted)
             }
         }
+        .toolbarBackground(.automatic, for: .navigationBar)
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     private var emptyState: some View {

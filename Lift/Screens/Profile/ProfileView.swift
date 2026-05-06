@@ -42,7 +42,14 @@ struct ProfileView: View {
                 Spacer()
             }
         }
-        .navigationTitle("PROFILE")
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("PROFILE")
+                    .font(.liftBody)
+                    .foregroundStyle(Color.liftPrimary)
+            }
+        }
+        .toolbarBackground(.automatic, for: .navigationBar)
         .navigationBarTitleDisplayMode(.inline)
         .alert("CLEAR ALL DATA?", isPresented: $showDeleteConfirm) {
             Button("DELETE EVERYTHING", role: .destructive) {
