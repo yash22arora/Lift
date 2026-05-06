@@ -21,6 +21,20 @@ struct LiftApp: App {
         }
     }()
 
+    init() {
+        print("─── ALL FONTS ───")
+        
+        for family in UIFont.familyNames.sorted() {
+            print("FAMILY:", family)
+            
+            for name in UIFont.fontNames(forFamilyName: family) {
+                print("   FONT:", name)
+            }
+        }
+        
+        print("────────────────")
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()

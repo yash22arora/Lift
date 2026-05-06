@@ -37,7 +37,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A4661CC32FAB97A700C39E15 /* Lift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Lift.xcodeproj; sourceTree = "<group>"; };
 		A485ED0F2FAA91F500BEA7A4 /* Lift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Lift.xcodeproj; sourceTree = "<group>"; };
+		A485EDF92FAB93EF00BEA7A4 /* Lift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Lift.xcodeproj; sourceTree = "<group>"; };
+		A485EE922FAB950F00BEA7A4 /* Lift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Lift.xcodeproj; sourceTree = "<group>"; };
+		A485EFC42FAB961800BEA7A4 /* Lift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Lift.xcodeproj; sourceTree = "<group>"; };
 		A4FD44D52FA93A24003783A6 /* Lift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4FD45542FA940F1003783A6 /* LiftLiveActivityExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = LiftLiveActivityExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4FD45562FA940F1003783A6 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -45,6 +49,23 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A4661D0C2FAB995200C39E15 /* Exceptions for "Lift" folder in "Lift" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A4FD44D42FA93A24003783A6 /* Lift */;
+		};
+		A485F00D2FAB972300BEA7A4 /* Exceptions for "Lift" folder in "LiftLiveActivityExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Resources/Fonts/BebasNeue-Regular.ttf",
+				"Resources/Fonts/SpaceGrotesk-Bold.ttf",
+				"Resources/Fonts/SpaceGrotesk-Medium.ttf",
+				"Resources/Fonts/SpaceGrotesk-Regular.ttf",
+			);
+			target = A4FD45532FA940F1003783A6 /* LiftLiveActivityExtension */;
+		};
 		A4FD45672FA940F4003783A6 /* Exceptions for "LiftLiveActivity" folder in "LiftLiveActivityExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -57,6 +78,10 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A4FD44D72FA93A24003783A6 /* Lift */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A4661D0C2FAB995200C39E15 /* Exceptions for "Lift" folder in "Lift" target */,
+				A485F00D2FAB972300BEA7A4 /* Exceptions for "Lift" folder in "LiftLiveActivityExtension" target */,
+			);
 			path = Lift;
 			sourceTree = "<group>";
 		};
@@ -90,7 +115,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A4661CC52FAB97A700C39E15 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 		A485ED112FAA91F500BEA7A4 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A485EDFB2FAB93EF00BEA7A4 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A485EE942FAB950F00BEA7A4 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A485EFC62FAB961800BEA7A4 /* Products */ = {
 			isa = PBXGroup;
 			name = Products;
 			sourceTree = "<group>";
@@ -204,8 +249,24 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = A4661CC52FAB97A700C39E15 /* Products */;
+					ProjectRef = A4661CC32FAB97A700C39E15 /* Lift.xcodeproj */;
+				},
+				{
+					ProductGroup = A485EE942FAB950F00BEA7A4 /* Products */;
+					ProjectRef = A485EE922FAB950F00BEA7A4 /* Lift.xcodeproj */;
+				},
+				{
 					ProductGroup = A485ED112FAA91F500BEA7A4 /* Products */;
 					ProjectRef = A485ED0F2FAA91F500BEA7A4 /* Lift.xcodeproj */;
+				},
+				{
+					ProductGroup = A485EDFB2FAB93EF00BEA7A4 /* Products */;
+					ProjectRef = A485EDF92FAB93EF00BEA7A4 /* Lift.xcodeproj */;
+				},
+				{
+					ProductGroup = A485EFC62FAB961800BEA7A4 /* Products */;
+					ProjectRef = A485EFC42FAB961800BEA7A4 /* Lift.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -390,7 +451,9 @@
 				DEVELOPMENT_TEAM = M5GMY78KT6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Lift/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_UIAppFonts = "BebasNeue-Regular.ttf SpaceGrotesk-Regular.ttf SpaceGrotesk-Medium.ttf SpaceGrotesk-Bold.ttf";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -423,7 +486,9 @@
 				DEVELOPMENT_TEAM = M5GMY78KT6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Lift/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_UIAppFonts = "BebasNeue-Regular.ttf SpaceGrotesk-Regular.ttf SpaceGrotesk-Medium.ttf SpaceGrotesk-Bold.ttf";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
