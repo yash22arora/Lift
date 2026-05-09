@@ -199,10 +199,14 @@ struct PastWorkoutCard: View {
         return "(\(count) SETS)"
     }
 
-    private var formattedDate: String {
+    private static let cardDateFormatter: DateFormatter = {
         let f = DateFormatter()
         f.dateFormat = "EEE, MMM d • h:mm a"
-        return f.string(from: workout.startDate).uppercased()
+        return f
+    }()
+
+    private var formattedDate: String {
+        return Self.cardDateFormatter.string(from: workout.startDate).uppercased()
     }
 }
 

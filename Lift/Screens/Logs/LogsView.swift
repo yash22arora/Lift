@@ -46,28 +46,12 @@ struct LogsView: View {
                         .listRowInsets(EdgeInsets())
 
                     ForEach(allSets) { set in
-                        logRow(set)
-                            .listRowInsets(EdgeInsets(top: Spacing.xs, leading: Spacing.md, bottom: Spacing.xs, trailing: Spacing.md))
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
-                            .swipeActions(edge: .leading) {
-                                Button {
-                                    editingSetID = set.id
-                                    focusedField = .weight(set.id)
-                                } label: {
-                                    Label("Edit", systemImage: "pencil")
-                                        .foregroundStyle(Color.liftBackground)
-                                }
-                                .tint(Color.liftPrimary)
-                            }
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button(role: .destructive) {
-                                    deleteSet(set)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                                .tint(Color.liftAccent)
-                            }
+                        LogRowView(
+                            set: set,
+                            editingSetID: $editingSetID,
+                            focusedField: $focusedField,
+                            onDelete: { deleteSet(set) }
+                        )
                     }
                     
                     // Bottom padding buffer
@@ -101,11 +85,21 @@ struct LogsView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
-    private func logRow(_ set: WorkoutSet) -> some View {
-        @Bindable var bindableSet = set
+    private func deleteSet(_ set: WorkoutSet) {
+        modelContext.delete(set)
+    }
+}
+
+struct LogRowView: View {
+    @Bindable var set: WorkoutSet
+    @Binding var editingSetID: UUID?
+    var focusedField: FocusState<LogsView.Field?>.Binding
+    var onDelete: () -> Void
+
+    var body: some View {
         let isEditing = editingSetID == set.id
 
-        return HStack {
+        HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(set.exercise?.exerciseName.uppercased() ?? "UNKNOWN EXERCISE")
                     .font(.liftBodyMd)
@@ -126,8 +120,8 @@ struct LogsView: View {
                 HStack(alignment: .lastTextBaseline, spacing: 4) {
                     // Weight Input
                     HStack(alignment: .lastTextBaseline, spacing: 2) {
-                        TextField("", value: $bindableSet.weightKg, format: .number)
-                            .focused($focusedField, equals: .weight(set.id))
+                        TextField("", value: $set.weightKg, format: .number)
+                            .focused(focusedField, equals: .weight(set.id))
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
                             .frame(width: 60)
@@ -145,8 +139,8 @@ struct LogsView: View {
                     
                     // Reps Input
                     HStack(alignment: .lastTextBaseline, spacing: 2) {
-                        TextField("", value: $bindableSet.reps, format: .number)
-                            .focused($focusedField, equals: .reps(set.id))
+                        TextField("", value: $set.reps, format: .number)
+                            .focused(focusedField, equals: .reps(set.id))
                             .keyboardType(.numberPad)
                             .multilineTextAlignment(.trailing)
                             .frame(width: 40)
@@ -188,16 +182,36 @@ struct LogsView: View {
                 .stroke(isEditing ? Color.liftPrimary : Color.liftBorder, 
                         lineWidth: isEditing ? BorderWidth.thick : BorderWidth.thin)
         )
+        .listRowInsets(EdgeInsets(top: Spacing.xs, leading: Spacing.md, bottom: Spacing.xs, trailing: Spacing.md))
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
+        .swipeActions(edge: .leading) {
+            Button {
+                editingSetID = set.id
+                focusedField.wrappedValue = .weight(set.id)
+            } label: {
+                Label("Edit", systemImage: "pencil")
+            }
+            .tint(Color.liftPrimary)
+        }
+        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+            Button(role: .destructive) {
+                onDelete()
+            } label: {
+                Label("Delete", systemImage: "trash")
+            }
+            .tint(Color.liftAccent)
+        }
     }
 
-    private func deleteSet(_ set: WorkoutSet) {
-        modelContext.delete(set)
-    }
-
-    private func formatDate(_ date: Date) -> String {
+    private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d, HH:mm"
-        return formatter.string(from: date)
+        return formatter
+    }()
+
+    private func formatDate(_ date: Date) -> String {
+        return Self.dateFormatter.string(from: date)
     }
 }
 

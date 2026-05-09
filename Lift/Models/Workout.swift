@@ -4,6 +4,13 @@
 import Foundation
 import SwiftData
 
+private let volumeFormatter: NumberFormatter = {
+    let f = NumberFormatter()
+    f.numberStyle = .decimal
+    f.maximumFractionDigits = 0
+    return f
+}()
+
 @Model
 final class Workout {
     var id: UUID
@@ -42,12 +49,8 @@ final class Workout {
         exercises.reduce(0) { $0 + $1.totalVolume }
     }
 
-    /// Formatted volume string e.g. "12,400 KG"
     var totalVolumeFormatted: String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.maximumFractionDigits = 0
-        let formatted = formatter.string(from: NSNumber(value: totalVolumeKg)) ?? "0"
+        let formatted = volumeFormatter.string(from: NSNumber(value: totalVolumeKg)) ?? "0"
         return "\(formatted) KG"
     }
 
