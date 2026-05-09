@@ -15,8 +15,8 @@ final class DashboardViewModel {
     var weeklyWorkoutCount: Int = 4
     var isLoadingWorkouts: Bool = false
 
-    // Mock step data (static, no HealthKit)
-    let stepCount: Int = 8_432
+    // Real step data via HealthKit
+    var stepCount: Int = 0
     let stepGoal: Int = 10_000
 
     private var repository: WorkoutRepository?
@@ -45,6 +45,13 @@ final class DashboardViewModel {
     }
 
     private func loadWorkouts() async {
+        do {
+            try await HealthKitService.shared.requestAuthorization()
+            stepCount = await HealthKitService.shared.todayStepCount()
+        } catch {
+            print("[Dashboard] HealthKit authorization error: \(error)")
+        }
+        
         guard let repo = repository else { return }
         isLoadingWorkouts = true
         do {
