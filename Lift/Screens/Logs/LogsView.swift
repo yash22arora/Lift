@@ -56,8 +56,9 @@ struct LogsView: View {
                                     focusedField = .weight(set.id)
                                 } label: {
                                     Label("Edit", systemImage: "pencil")
+                                        .foregroundStyle(Color.liftBackground)
                                 }
-                                .tint(.blue)
+                                .tint(Color.liftPrimary)
                             }
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button(role: .destructive) {
@@ -65,7 +66,7 @@ struct LogsView: View {
                                 } label: {
                                     Label("Delete", systemImage: "trash")
                                 }
-                                .tint(.red)
+                                .tint(Color.liftAccent)
                             }
                     }
                     

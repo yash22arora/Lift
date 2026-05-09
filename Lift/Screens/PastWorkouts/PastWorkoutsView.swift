@@ -20,19 +20,41 @@ struct PastWorkoutsView: View {
             if workouts.isEmpty {
                 emptyState
             } else {
-                ScrollView(showsIndicators: false) {
-                    LazyVStack(spacing: Spacing.sm) {
-                        ForEach(workouts) { workout in
-                            NavigationLink(destination: WorkoutDetailView(workout: workout)) {
-                                PastWorkoutCard(workout: workout)
+                List {
+                    // Top padding buffer
+                    Color.clear
+                        .frame(height: Spacing.xs)
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets())
+
+                    ForEach(workouts) { workout in
+                        NavigationLink(destination: WorkoutDetailView(workout: workout)) {
+                            PastWorkoutCard(workout: workout)
+                        }
+                        .buttonStyle(.plain)
+                        .listRowInsets(EdgeInsets(top: Spacing.xs, leading: Spacing.md, bottom: Spacing.xs, trailing: Spacing.md))
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            Button(role: .destructive) {
+                                deleteWorkout(workout)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
                             }
-                            .buttonStyle(.plain)
+                            .tint(Color.liftAccent)
                         }
                     }
-                    .padding(.horizontal, Spacing.md)
-                    .padding(.top, Spacing.md)
-                    .padding(.bottom, 40)
+
+                    // Bottom padding buffer
+                    Color.clear
+                        .frame(height: Spacing.sm)
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets())
                 }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
             }
         }
         .toolbar {
@@ -50,6 +72,10 @@ struct PastWorkoutsView: View {
         }
         .toolbarBackground(.automatic, for: .navigationBar)
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func deleteWorkout(_ workout: Workout) {
+        modelContext.delete(workout)
     }
 
     private var emptyState: some View {
