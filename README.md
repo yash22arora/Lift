@@ -2,7 +2,11 @@
 
 A modern, native iOS workout tracker built with **SwiftUI** and **SwiftData**. Lift is designed for lifters who want to log strength workouts quickly during a session and watch their progress over time, wrapped in a bold, brutalist "neon-on-obsidian" design language.
 
-> Screenshots coming soon.
+<div>
+  <img src="Assets/IMG_1778.PNG" alt="Screenshot 1" style="width:32%; display:inline-block; margin-right:1%; vertical-align:middle;" />
+  <img src="Assets/IMG_1779.PNG" alt="Screenshot 2" style="width:32%; display:inline-block; margin-right:1%; vertical-align:middle;" />
+  <img src="Assets/IMG_1777.PNG" alt="Screenshot 3" style="width:32%; display:inline-block; vertical-align:middle;" />
+</div>
 
 ---
 
@@ -23,16 +27,16 @@ A modern, native iOS workout tracker built with **SwiftUI** and **SwiftData**. L
 
 ## Tech Stack
 
-| Area | Technology |
-|------|------------|
-| UI | SwiftUI (dark mode only) |
-| Persistence | SwiftData (`@Model`) |
-| State | `@Observable` view models (Observation framework) |
-| Health data | HealthKit (step count) |
-| Live Activity | ActivityKit + WidgetKit (extension target) |
-| Charts | Swift Charts |
-| Language | Swift 5 |
-| Min. deployment | iOS 26.2 |
+| Area            | Technology                                        |
+| --------------- | ------------------------------------------------- |
+| UI              | SwiftUI (dark mode only)                          |
+| Persistence     | SwiftData (`@Model`)                              |
+| State           | `@Observable` view models (Observation framework) |
+| Health data     | HealthKit (step count)                            |
+| Live Activity   | ActivityKit + WidgetKit (extension target)        |
+| Charts          | Swift Charts                                      |
+| Language        | Swift 5                                           |
+| Min. deployment | iOS 26.2                                          |
 
 ---
 
@@ -156,4 +160,4 @@ The exercise catalog lives in [`Lift/Resources/ExerciseLibrary.json`](Lift/Resou
 
 ---
 
-*Built by [@servatom / Yashvardhan Arora]. Bundle identifier: `com.servatom.Lift`.*
+_Built by [@servatom / Yashvardhan Arora]. Bundle identifier: `com.servatom.Lift`._
